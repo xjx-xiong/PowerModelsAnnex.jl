@@ -73,6 +73,7 @@ set_optimizer_attribute(model, "print_level", 0)
 @variable(model, ref[:gen][i]["qmin"] <= qg[i in keys(ref[:gen])] <= ref[:gen][i]["qmax"])
 
 # Add power flow variables p to represent the active power flow for each branch
+# where (l, i, j) corresponds to (branch_idx, f_bus, t_bus)
 @variable(model, -ref[:branch][l]["rate_a"] <= p[(l,i,j) in ref[:arcs]] <= ref[:branch][l]["rate_a"])
 # Add power flow variables q to represent the reactive power flow for each branch
 @variable(model, -ref[:branch][l]["rate_a"] <= q[(l,i,j) in ref[:arcs]] <= ref[:branch][l]["rate_a"])
