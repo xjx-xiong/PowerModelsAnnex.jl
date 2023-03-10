@@ -2,7 +2,7 @@ using PowerModels
 using Ipopt
 using JuMP
 
-file_name = "/home/jinxin/xjx/SRIBD/ACOPF/code/PowerModelsAnnex.jl/src/model/case9.m"
+file_name = "/home/jinxin/xjx/SRIBD/ACOPF/code/PowerModelsAnnex.jl/src/model/case5.m"
 data = PowerModels.parse_file(file_name)
 
 PowerModels.calc_thermal_limits!(data)
@@ -25,8 +25,12 @@ set_optimizer_attribute(model, "print_level", 0)
     sum(gen["cost"][1]*pg[i]^2 + gen["cost"][2]*pg[i] + gen["cost"][3] for (i,gen) in ref[:gen])
 )
 
+# for (i,bus) in ref[:ref_buses]
+#     @constraint(model, vr[i]^2 + vi[i]^2 == 1)
+# end
+
 for (i,bus) in ref[:ref_buses]
-    @constraint(model, vr[i]^2 + vi[i]^2 == 1)
+    @constraint(model, vi[i] == 0)
 end
 
 for (i, bus) in ref[:bus]
@@ -104,5 +108,5 @@ println("The solver termination status is $(termination_status(model))")
 # Check the value of the objective function
 cost = objective_value(model)
 println("The cost of generation is $(cost).")
-println(model)
 println(value(pg[1]))
+println(solve_time(model))
